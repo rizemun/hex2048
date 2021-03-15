@@ -1,0 +1,11 @@
+{
+  "name": "hex2048",
+  "version": "1.0.0",
+  "description": "the hex variation of 2048 game",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "rizemun <rizeman01@gmail.com>",
+  "license": "ISC"
+}

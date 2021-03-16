@@ -2,10 +2,22 @@
   "name": "hex2048",
   "version": "1.0.0",
   "description": "the hex variation of 2048 game",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack serve --mode development",
+    "build": "webpack --mode production"
   },
   "author": "rizemun <rizeman01@gmail.com>",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "css-loader": "^5.1.2",
+    "html-webpack-plugin": "^5.3.1",
+    "inline-source-map": "^0.6.2",
+    "less": "^4.1.1",
+    "less-loader": "^8.0.0",
+    "style-loader": "^2.0.0",
+    "webpack": "^5.26.0",
+    "webpack-cli": "^4.5.0",
+    "webpack-dev-server": "^3.11.2"
+  }
 }

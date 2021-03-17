@@ -1,4 +1,7 @@
-import './a.less'
+import './styles.less'
+import {Field} from "@/Field"
 
-const a = 1;
-console.log(a);
+const fieldElement = document.getElementById('field')
+const field = new Field(fieldElement,4, 50)
+
+field.render();

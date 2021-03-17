@@ -42,5 +42,10 @@ module.exports = {
       title: 'Development',
       template: 'src/index.html'
     }),
-  ]
+  ],
+  resolve: {
+    alias: {
+      '@':path.resolve(__dirname, 'src/components')
+    }
+  }
 }

@@ -15,6 +15,8 @@ keyboard.onKeyDown('KeyW', () => console.log('key W pressed'))
 keyboard.onKeyDown('KeyE', () => console.log('key E pressed'))
 
 server.getData();
-
 field.render();
+field.updateAllNeighbours();
+
+console.log(field.table);
 

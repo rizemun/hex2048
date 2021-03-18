@@ -2,14 +2,19 @@ export class Hexagon {
   constructor({radius, coordinates}) {
     this.radius = radius;
     this.coordinates = coordinates;
-
-    this._calcSizes();
+    this._neighbours = {};
   }
 
-  _calcSizes() {
-    this.innerRadius = Math.sqrt(3) / 2 * this.radius;
-    this.tallerSize = this.radius;
-    this.widerSize =  2 * this.innerRadius;
+  get neighbours() {
+    return this._neighbours;
+  }
+
+  set neighbours(newNeighbours) {
+    this._neighbours = newNeighbours;
+  }
+
+  drawCoordinates() {
+    this.$innerEl.innerText = `[${this.coordinates.x}:${this.coordinates.y}:${this.coordinates.z}]`
   }
 
   drawText(text) {

@@ -12,16 +12,16 @@ export class Hexagon {
     this.widerSize =  2 * this.innerRadius;
   }
 
+  drawText(text) {
+    this.$innerEl.innerText = text;
+  }
+
   render() {
     this.$el = document.createElement('div')
     this.$el.classList.add('hexagon')
     this.$el.classList.add('hexagon_outer')
-
-    this.$el.innerHTML = `
-    <div class="hexagon hexagon_inner">
-      [${this.coordinates.x}:${this.coordinates.y}:${this.coordinates.z}]
-    </div> 
-    `
+    this.$el.innerHTML = `<div class="hexagon hexagon_inner"></div>`
+    this.$innerEl = this.$el.children[0];
     return this.$el
   }
 }

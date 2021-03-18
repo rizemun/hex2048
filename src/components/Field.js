@@ -6,8 +6,7 @@ export class Field {
     this.size = size;
     this.tableSize = size * 2 - 1;
     this.radius = radius;
-    this.fieldTable = {}
-
+    this.table = {}
     this._bindEvents();
     this._addStyles();
   }
@@ -23,7 +22,7 @@ export class Field {
 
     response.forEach(cell => {
       const {x, y, z, value} = cell;
-      this.fieldTable['' + x]['' + y]['' + z].drawText(value)
+      this.table['' + x]['' + y]['' + z].drawText(value)
     })
   }
 
@@ -32,17 +31,17 @@ export class Field {
       return !!obj[field];
     }
 
-    if (!exist(this.fieldTable, x)) {
-      this.fieldTable[x] = {};
+    if (!exist(this.table, x)) {
+      this.table[x] = {};
     }
-    if (!exist(this.fieldTable[x], y)) {
-      this.fieldTable[x][y] = {};
+    if (!exist(this.table[x], y)) {
+      this.table[x][y] = {};
     }
-    if (!exist(this.fieldTable[x][y], z)) {
-      this.fieldTable[x][y][z] = '';
+    if (!exist(this.table[x][y], z)) {
+      this.table[x][y][z] = '';
     }
 
-    this.fieldTable[x][y][z] = data;
+    this.table[x][y][z] = data;
   }
 
   _calcHexSizes() {

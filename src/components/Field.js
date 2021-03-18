@@ -6,7 +6,35 @@ export class Field {
     this.size = size;
     this.tableSize = size * 2 - 1;
     this.radius = radius;
-    this.fieldTable = []
+    this.fieldTable = {}
+
+    this._addStyles();
+  }
+
+  _saveCell(data, {x, y, z}) {
+    function exist(obj, field) {
+      return !!obj[field];
+    }
+
+    if (!exist(this.fieldTable, x)) {
+      this.fieldTable[x] = {};
+    }
+    if (!exist(this.fieldTable[x], y)) {
+      this.fieldTable[x][y] = {};
+    }
+    if (!exist(this.fieldTable[x][y], z)) {
+      this.fieldTable[x][y][z] = '';
+    }
+
+    this.fieldTable[x][y][z] = data;
+  }
+
+  _calcHexSizes() {
+    this.innerRadius = Math.sqrt(3) / 2 * this.radius;
+    return {
+      tallerSize: this.radius,
+      widerSize:  2 * this.innerRadius,
+    }
   }
 
   _createColumnTemplate(count, columnIndex) {
@@ -16,32 +44,43 @@ export class Field {
         : indexInColumn - columnIndex - this.size + 1
     }
     const getYCoordinate = (indexInColumn) => {
-      return - columnIndex - getZCoordinate(indexInColumn)
+      return -columnIndex - getZCoordinate(indexInColumn)
     }
 
     const radius = this.radius;
-    let innerPart = '';
+    const $column = document.createElement('div');
 
+    $column.classList.add('field__column');
     for (let i = 0; i < count; i++) {
-      const hexCell = new Hexagon({radius, coordinates: {x: columnIndex, y: getYCoordinate(i), z: getZCoordinate(i)}})
-      innerPart += hexCell.render();
-      this.fieldTable.push(hexCell)
+      const coordinates = {x: columnIndex, y: getYCoordinate(i), z: getZCoordinate(i)};
+      const hexCell = new Hexagon({radius, coordinates})
+
+      $column.append(hexCell.render());
+      this._saveCell(hexCell, coordinates)
     }
-    return `<div class="field__column" style="margin-left:${radius / 2}px">${innerPart}</div>`
+
+    return $column
   }
 
-  _createTemplate() {
-    let result = '';
+  _addStyles() {
+    const existStyle = document.getElementById('field-styles');
+    const hexSizes = this._calcHexSizes();
+    const style = `.field__column {margin-left: ${this.radius/2}px;}.hexagon_outer {width: ${hexSizes.tallerSize}px;height: ${hexSizes.widerSize}px;}`
 
-    for (let i = 0; i < this.tableSize; i++) {
-      const calculatedCount =  this.tableSize - Math.abs(this.size - 1 - i);
-      result += this._createColumnTemplate(calculatedCount, i - this.size + 1);
+    if (existStyle) {
+      existStyle.innerText = style;
+    } else {
+      const newStyle = document.createElement('style')
+      newStyle.id = 'field-styles';
+      newStyle.innerText = style;
+      document.head.append(newStyle);
     }
-
-    return result;
   }
 
   render() {
-    this.$el.innerHTML = this._createTemplate();
+    for (let i = 0; i < this.tableSize; i++) {
+      const calculatedCount = this.tableSize - Math.abs(this.size - 1 - i);
+      this.$el.append(this._createColumnTemplate(calculatedCount, i - this.size + 1));
+    }
   }
 }

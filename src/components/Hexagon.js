@@ -13,12 +13,15 @@ export class Hexagon {
   }
 
   render() {
-    return `
-      <div class="hexagon hexagon__outer" style="width:${this.tallerSize}px; height:${this.widerSize}px;">
-        <div class="hexagon hexagon__inner">
-          [${this.coordinates.x}:${this.coordinates.y}:${this.coordinates.z}]
-        </div>
-      </div> 
+    this.$el = document.createElement('div')
+    this.$el.classList.add('hexagon')
+    this.$el.classList.add('hexagon_outer')
+
+    this.$el.innerHTML = `
+    <div class="hexagon hexagon_inner">
+      [${this.coordinates.x}:${this.coordinates.y}:${this.coordinates.z}]
+    </div> 
     `
+    return this.$el
   }
 }

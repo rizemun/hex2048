@@ -3,13 +3,11 @@ export class Server {
     this.url = url;
   }
 
-  _onResponce(responce) {
-    const table = window.field.fieldTable;
-
-    responce.forEach(cell => {
-      const {x, y, z, value} = cell;
-      table['' + x]['' + y]['' + z].drawText(value)
-    })
+  _onResponce(response) {
+    const event = new CustomEvent("serverResponse", {
+      detail: response
+    });
+    document.dispatchEvent(event);
   }
 
   getData(body='[]') {

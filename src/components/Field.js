@@ -8,7 +8,23 @@ export class Field {
     this.radius = radius;
     this.fieldTable = {}
 
+    this._bindEvents();
     this._addStyles();
+  }
+
+  _bindEvents() {
+    this._onServerResponse = this._onServerResponse.bind(this)
+    document.removeEventListener('serverResponse', this._onServerResponse);
+    document.addEventListener('serverResponse', this._onServerResponse)
+  }
+
+  _onServerResponse(ev) {
+    const response = ev.detail;
+
+    response.forEach(cell => {
+      const {x, y, z, value} = cell;
+      this.fieldTable['' + x]['' + y]['' + z].drawText(value)
+    })
   }
 
   _saveCell(data, {x, y, z}) {

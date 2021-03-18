@@ -18,5 +18,3 @@ server.getData();
 
 field.render();
 
-window.field = field;
-

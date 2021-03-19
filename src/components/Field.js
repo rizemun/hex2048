@@ -70,12 +70,10 @@ export class Field {
 
     return neigboursCoorinates
       .filter(this._cellExist.bind(this))
-      .map((coords) => {
-        return {
-          cell: this._getCell(coords),
-          direction: coords.direction
-        }
-      })
+      .reduce((acc, coords) => {
+        acc[coords.direction] = this._getCell(coords);
+        return acc
+      }, {})
   }
 
   _updateNeighbours(coordinates) {

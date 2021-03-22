@@ -88,5 +88,6 @@ $buttons.forEach(button => {
   button.addEventListener('click', (ev) => {
     const count = ev.target.dataset.countButton;
     globalReinit(count);
+    $range.value = count;
   })
 })

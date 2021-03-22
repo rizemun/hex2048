@@ -334,14 +334,18 @@ export class Field {
 
       const arrForLogic = cell.numbersToUse.reverse();
       const calculated = arrForLogic.reduce((acc, number) => {
-        if (acc[acc.length - 1] === number) {
-          acc[acc.length - 1] = number * 2;
+        if (acc[acc.length - 1] && !acc[acc.length - 1].summed && acc[acc.length - 1].number === number) {
+          acc[acc.length - 1].number = number * 2;
+          acc[acc.length - 1].summed = true;
         } else {
-          acc.push(number)
+          acc.push({
+            number,
+            summed: false
+          })
         }
-
         return acc;
       }, [])
+        .map(elem => elem.number)
 
       cell.numbersToUse = [];
       cell.calcuatedRow = calculated;

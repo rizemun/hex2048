@@ -44,8 +44,8 @@ keyboard.onKeyDown('KeyA', () => {field.makeStep('south-west') && server.getData
 keyboard.onKeyDown('KeyS', () => {field.makeStep('south') && server.getData(field.dataToSend)})
 keyboard.onKeyDown('KeyD', () => {field.makeStep('south-east') && server.getData(field.dataToSend)})
 
-
-server.getData();
+//for tests correct launch
+setTimeout(() => {server.getData()}, 200);
 field.updateAllNeighbours();
 
 document.addEventListener('game:end', () => {

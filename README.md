@@ -11,7 +11,7 @@ Controlls:
  - S - south
  - D - south-east
 
-This project uses api of random numbers for game form repo https://github.com/evolution-gaming/typescript-bootcamp/tree/main/assigment/hex2048
+This project uses api of random numbers for game from repo https://github.com/evolution-gaming/typescript-bootcamp/tree/main/assigment/hex2048
 
 
 Features:

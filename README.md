@@ -19,3 +19,6 @@ Features:
 - Ajustable size from 1 cell to 10 (can be bigger if u need, but need some work with fonts for it)
 - Can use hash in address to fast sutup 2, 3 or 4 size field
 - Nice colors : )
+
+
+Repo public because of using github actions.

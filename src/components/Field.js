@@ -7,6 +7,7 @@ export class Field {
     this.tableSize = size * 2 - 1;
     this.radius = radius;
     this.table = {}
+    this.allHexagons = [];
     this._bindEvents();
     this._addStyles();
   }
@@ -22,7 +23,7 @@ export class Field {
 
     response.forEach(cell => {
       const {x, y, z} = convertCoordinatesToStrings(cell);
-      this.table[x][y][z].drawText(cell.value)
+      this.table[x][y][z].value = cell.value
     })
   }
 
@@ -108,6 +109,7 @@ export class Field {
 
       $column.append(hexCell.render());
       this._saveCell(hexCell, coordinates)
+      this.allHexagons.push(hexCell);
     }
 
     return $column
@@ -145,6 +147,219 @@ export class Field {
         }
       }
     }
+  }
+
+  _getMovementSource(direction) {
+    const corner = this.size - 1;
+    const sources = {
+      'north-west': {
+        x: corner,
+        y: -corner
+      },
+      'north': {
+        z: corner,
+        y: -corner
+      },
+      'north-east': {
+        x: -corner,
+        z: corner
+      },
+      'south-west': {
+        x: corner,
+        z: -corner
+      },
+      'south': {
+        y: corner,
+        z: -corner
+      },
+      'south-east': {
+        x: -corner,
+        y: corner
+      },
+    }
+    const cornerData = sources[direction]
+
+    return this.allHexagons.filter(cell => {
+      const coords = cell.coordinates;
+      const {x, y, z} = cornerData;
+
+      if (x && coords.x === x) {
+        return true;
+      }
+      if (y && coords.y === y) {
+        return true;
+      }
+      if (z && coords.z === z) {
+        return true;
+      }
+
+      return false
+    })
+  }
+
+  _getMovementDestination(direction) {
+    const corner = this.size - 1;
+    const destinations = {
+      'north-west': {
+        x: -corner,
+        y: corner
+      },
+      'north': {
+        z: -corner,
+        y: corner
+      },
+      'north-east': {
+        x: corner,
+        z: -corner
+      },
+      'south-west': {
+        x: -corner,
+        z: corner
+      },
+      'south': {
+        y: -corner,
+        z: corner
+      },
+      'south-east': {
+        x: corner,
+        y: -corner
+      },
+    }
+    const cornerData = destinations[direction]
+
+    return this.allHexagons.filter(cell => {
+      const coords = cell.coordinates;
+      const {x, y, z} = cornerData;
+
+      if (x && coords.x === x) {
+        return true;
+      }
+      if (y && coords.y === y) {
+        return true;
+      }
+      if (z && coords.z === z) {
+        return true;
+      }
+
+      return false
+    })
+  }
+
+  _getOpposizeDirection(direction) {
+    const opposiziteDirections = {
+      'north-west': 'south-east',
+      'north': 'south',
+      'north-east': 'south-west',
+      'south-west': 'north-east',
+      'south': 'north',
+      'south-east': 'north-west',
+    }
+
+    return opposiziteDirections[direction]
+  }
+
+  makeStep(direction) {
+    console.log({direction})
+    const sources = this._getMovementSource(direction)
+
+    sources.forEach(cell => {
+      let currentCell = cell;
+      let nextCell = currentCell.neighbours[direction];
+
+      while (currentCell) {
+        nextCell = currentCell.neighbours[direction];
+        const value = currentCell.value;
+        const numbersToUse = currentCell.numbersToUse;
+
+        if (!value && !numbersToUse.length) {
+          currentCell = nextCell
+          if (!currentCell) {
+            break
+          }
+          continue
+        }
+
+        if (nextCell) {
+          nextCell.numbersToUse.push(...numbersToUse)
+          if (value) {
+            nextCell.numbersToUse.push(value);
+          }
+          currentCell.numbersToUse = [];
+          currentCell.value = 0;
+        } else {
+          if (value) {
+            currentCell.numbersToUse.push(value);
+          }
+        }
+        currentCell = nextCell;
+
+
+      }
+    })
+
+
+    const destinations = this._getMovementDestination(direction)
+    destinations.forEach(cell => {
+
+      if (!cell.numbersToUse.length) {
+        return;
+      }
+
+      const arrForLogic = cell.numbersToUse.reverse();
+      const calculated = arrForLogic.reduce((acc, number, index) => {
+        if (acc[acc.length - 1] === number) {
+          acc[acc.length - 1] = number * 2;
+        } else {
+          acc.push(number)
+        }
+
+        return acc;
+      }, [])
+
+      cell.numbersToUse = [];
+      cell.calcuatedRow = calculated;
+
+      console.log('%ccalculated: ', 'color: rebeccapurple; font-style: italic', calculated);
+
+      const oppDirection = this._getOpposizeDirection(direction);
+      // console.log({oppDirection})
+      cell.calcuatedRow.forEach((number, i) => {
+        let cellToUpdate = cell;
+
+        for (let j = 0; j < i; j++) {
+          cellToUpdate = cellToUpdate.neighbours[oppDirection]
+        }
+
+        if (!cellToUpdate) {
+          console.log(cell)
+          console.log(direction)
+          console.log(calculated)
+          debugger
+        }
+
+        cellToUpdate.value = number;
+      })
+      cell.calcuatedRow = [];
+
+
+    })
+
+
+  }
+
+  get dataToSend() {
+    return JSON.stringify(this.allHexagons
+      .filter(cell => cell.value)
+      .map(cell => {
+        return {
+          x: cell.coordinates.x,
+          y: cell.coordinates.y,
+          z: cell.coordinates.z,
+          value: cell.value
+        }
+
+      })
+    )
   }
 }
 

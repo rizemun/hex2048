@@ -9,7 +9,23 @@
   <title>hex2048</title>
 </head>
 <body>
-<div id="field" class="field">
+
+<select id="url-server">
+  <option id="remote" value="//68f02c80-3bed-4e10-a747-4ff774ae905a.pub.instances.scw.cloud">Remote server</option>
+  <option id="localhost" value="http://localhost:13337/">Local server</option>
+</select>
+<div id="countSelector">
+  <div> Размер поля </div>
+  <button data-count-button="2">2</button>
+  <button data-count-button="3">3</button>
+  <button data-count-button="4">4</button>
+  <input id="count-range" type="range" min="1" max="10" value="2">
 </div>
+
+
+<div id="field" class="field"></div>
+
+
+<div id="status">Game Status: <span data-status="playing">playing</span></div>
 </body>
 </html>

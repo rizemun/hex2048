@@ -1,6 +1,7 @@
 export class Server {
-  constructor(url) {
+  constructor(url, fieldSize) {
     this.url = url;
+    this.fieldSize = fieldSize;
   }
 
   _onResponce(response) {
@@ -11,12 +12,20 @@ export class Server {
   }
 
   getData(body='[]') {
-    fetch(this.url, {
+    fetch(`${this.url}/${this.fieldSize}`, {
       method: 'post',
       body
     })
       .then(res => res.json())
       .then(this._onResponce.bind(this));
+  }
+
+  setUrl(newUrl) {
+    this.url = newUrl;
+  }
+
+  setFieldSize(newFieldSize) {
+    this.fieldSize = newFieldSize;
   }
 }
 

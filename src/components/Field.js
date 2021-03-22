@@ -1,8 +1,21 @@
 import {Hexagon} from "@/Hexagon"
 
+const DIRECTIONS = {
+  north: 'north',
+  northEast: 'north-east',
+  northWest: 'north-west',
+  south: 'south',
+  southEast: 'south-east',
+  southWest: 'south-west'
+}
+
 export class Field {
   constructor($el, size, radius) {
     this.$el = $el;
+    this.reinit(size, radius);
+  }
+
+  reinit(size, radius) {
     this.size = size;
     this.tableSize = size * 2 - 1;
     this.radius = radius;
@@ -10,6 +23,7 @@ export class Field {
     this.allHexagons = [];
     this._bindEvents();
     this._addStyles();
+    this.render();
   }
 
   _bindEvents() {
@@ -24,7 +38,13 @@ export class Field {
     response.forEach(cell => {
       const {x, y, z} = convertCoordinatesToStrings(cell);
       this.table[x][y][z].value = cell.value
+      this.table[x][y][z].$el.dataset.value = cell.value
     })
+
+    if(this.isGameOver()) {
+      const event = new CustomEvent("game:end",{});
+      document.dispatchEvent(event);
+    }
   }
 
   _cellExist({x, y, z}) {
@@ -61,12 +81,12 @@ export class Field {
   _findNeighbours(coordinates) {
     const {x, y, z} = convertCoordinatesToNumbers(coordinates)
     const neigboursCoorinates = [
-      {x: x + 1, y: y - 1, z, direction: 'south-east'},
-      {x: x - 1, y: y + 1, z, direction: 'north-west'},
-      {x, y: y + 1, z: z - 1, direction: 'north'},
-      {x, y: y - 1, z: z + 1, direction: 'south'},
-      {x: x + 1, y, z: z - 1, direction: 'north-east'},
-      {x: x - 1, y, z: z + 1, direction: 'south-west'}
+      {x: x + 1, y: y - 1, z, direction: DIRECTIONS.southEast},
+      {x: x - 1, y: y + 1, z, direction: DIRECTIONS.northWest},
+      {x, y: y + 1, z: z - 1, direction: DIRECTIONS.north},
+      {x, y: y - 1, z: z + 1, direction: DIRECTIONS.south},
+      {x: x + 1, y, z: z - 1, direction: DIRECTIONS.northEast},
+      {x: x - 1, y, z: z + 1, direction: DIRECTIONS.southWest}
     ];
 
     return neigboursCoorinates
@@ -131,6 +151,7 @@ export class Field {
   }
 
   render() {
+    this.$el.innerHTML = '';
     for (let i = 0; i < this.tableSize; i++) {
       const calculatedCount = this.tableSize - Math.abs(this.size - 1 - i);
       this.$el.append(this._createColumnTemplate(calculatedCount, i - this.size + 1));
@@ -247,20 +268,29 @@ export class Field {
 
   _getOpposizeDirection(direction) {
     const opposiziteDirections = {
-      'north-west': 'south-east',
-      'north': 'south',
-      'north-east': 'south-west',
-      'south-west': 'north-east',
-      'south': 'north',
-      'south-east': 'north-west',
+      'north-west': DIRECTIONS.southEast,
+      'north': DIRECTIONS.south,
+      'north-east': DIRECTIONS.southWest,
+      'south-west': DIRECTIONS.northEast,
+      'south': DIRECTIONS.north,
+      'south-east': DIRECTIONS.northWest,
     }
 
     return opposiziteDirections[direction]
   }
 
   makeStep(direction) {
-    console.log({direction})
+    if(this.isMoving) {
+      return
+    }
+
+    this.isMoving = true;
     const sources = this._getMovementSource(direction)
+    let isMoved = false
+
+    this.allHexagons.forEach(cell => {
+      cell.oldValue = cell.value;
+    })
 
     sources.forEach(cell => {
       let currentCell = cell;
@@ -286,27 +316,24 @@ export class Field {
           }
           currentCell.numbersToUse = [];
           currentCell.value = 0;
+          currentCell.$el.dataset.value = 0;
         } else {
           if (value) {
             currentCell.numbersToUse.push(value);
           }
         }
         currentCell = nextCell;
-
-
       }
     })
 
-
     const destinations = this._getMovementDestination(direction)
     destinations.forEach(cell => {
-
       if (!cell.numbersToUse.length) {
         return;
       }
 
       const arrForLogic = cell.numbersToUse.reverse();
-      const calculated = arrForLogic.reduce((acc, number, index) => {
+      const calculated = arrForLogic.reduce((acc, number) => {
         if (acc[acc.length - 1] === number) {
           acc[acc.length - 1] = number * 2;
         } else {
@@ -319,10 +346,7 @@ export class Field {
       cell.numbersToUse = [];
       cell.calcuatedRow = calculated;
 
-      console.log('%ccalculated: ', 'color: rebeccapurple; font-style: italic', calculated);
-
       const oppDirection = this._getOpposizeDirection(direction);
-      // console.log({oppDirection})
       cell.calcuatedRow.forEach((number, i) => {
         let cellToUpdate = cell;
 
@@ -330,21 +354,63 @@ export class Field {
           cellToUpdate = cellToUpdate.neighbours[oppDirection]
         }
 
-        if (!cellToUpdate) {
-          console.log(cell)
-          console.log(direction)
-          console.log(calculated)
-          debugger
+        //todo: possible bug! sometimes cellToUpdate is undefined
+        if(!cellToUpdate) {
+          return
         }
 
         cellToUpdate.value = number;
+        cellToUpdate.$el.dataset.value = number;
       })
       cell.calcuatedRow = [];
-
-
     })
 
+    this.allHexagons.forEach(cell => {
+      if(cell.oldValue !== cell.value) {
+        isMoved = true;
+      }
+    })
 
+    this.isMoving = false;
+    return isMoved
+  }
+
+  isGameOver() {
+    const directionsToCheck = [
+      DIRECTIONS.northWest,
+      DIRECTIONS.north,
+      DIRECTIONS.northEast
+    ]
+
+    let isOver = true
+
+    directionsToCheck.forEach(direction => {
+      const sources = this._getMovementSource(direction);
+      let oldCell = '';
+      sources.forEach(cell => {
+        let currentValue = 0;
+        let currentCell = cell;
+        let needToStopGoingNeighbours = false;
+        do {
+          if(currentValue === currentCell.value) {
+            isOver = false;
+          }
+          if(currentCell.value === 0) {
+            isOver = false;
+          }
+          currentValue = currentCell.value;
+
+          if(!currentCell.neighbours[direction]) {
+            needToStopGoingNeighbours = true;
+          }
+
+          oldCell = currentCell;
+          currentCell = currentCell.neighbours[direction]
+        } while (!needToStopGoingNeighbours)
+      })
+    })
+
+    return isOver
   }
 
   get dataToSend() {

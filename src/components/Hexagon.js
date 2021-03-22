@@ -4,6 +4,7 @@ export class Hexagon {
     this.coordinates = coordinates;
     this._neighbours = {};
     this._value = 0;
+    this.oldValue = 0;
     this.numbersToUse = [];
   }
 
@@ -38,6 +39,10 @@ export class Hexagon {
     this.$el.classList.add('hexagon_outer')
     this.$el.hexagon = this;
     this.$el.innerHTML = `<div class="hexagon hexagon_inner"></div>`
+    this.$el.dataset.x = this.coordinates.x;
+    this.$el.dataset.y = this.coordinates.y;
+    this.$el.dataset.z = this.coordinates.z;
+    this.$el.dataset.value = 0;
     this.$innerEl = this.$el.children[0];
     return this.$el
   }

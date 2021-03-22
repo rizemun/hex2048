@@ -60,6 +60,78 @@ body {
     font-family: 'Roboto', Arial, sans-serif;
     font-size: 26px;
   }
+  
+  &[data-value="2"] &_inner {
+    background-color: #43a047;
+  }
+
+  &[data-value="4"] &_inner {
+    background-color: #4caf50;
+  }
+
+  &[data-value="8"] &_inner {
+    background-color: #66bb6a;
+  }
+
+  &[data-value="16"] &_inner {
+    background-color: #7cb342;
+  }
+
+  &[data-value="32"] &_inner {
+    background-color: #8bc34a;
+  }
+
+  &[data-value="64"] &_inner {
+    background-color: #9ccc65;
+  }
+
+  &[data-value="128"] &_inner {
+    background-color: #c0ca33;
+  }
+
+  &[data-value="256"] &_inner {
+    background-color: #cddc39;
+  }
+
+  &[data-value="512"] &_inner {
+    background-color: #d4e157;
+  }
+
+  &[data-value="1024"] &_inner {
+    background-color: #fdd835;
+  }
+
+  &[data-value="2048"] &_inner {
+    background-color: #ffeb3b;
+  }
+
+  &[data-value="4096"] &_inner {
+    background-color: #ffee58;
+  }
+
+  &[data-value="8192"] &_inner {
+    background-color: #ffb300;
+  }
+
+  &[data-value="16384"] &_inner {
+    background-color: #ffc107;
+  }
+
+  &[data-value="32768"] &_inner {
+    background-color: #ffca28;
+  }
+
+  &[data-value="56536"] &_inner {
+    background-color: #fb8c00;
+  }
+
+  &[data-value="131072"] &_inner {
+    background-color: #ff5722;
+  }
+
+  &[data-value="262144"] &_inner {
+    background-color: #f4511e;
+  }
 }
 
 .field {
@@ -75,4 +147,33 @@ body {
     justify-content: center;
     align-items: center;
   }
+}
+
+
+#url-server,
+#status,
+#countSelector {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  font-family: 'Roboto', Arial, sans-serif;
+  font-size: 16px;
+  padding: .5em 1em;
+}
+
+#url-server {
+  top: 10%;
+}
+
+#countSelector {
+  top: calc(10% + 50px);
+  padding: 0;
+
+  input {
+    display: block;
+  }
+}
+
+#status {
+  top: 90%;
 }

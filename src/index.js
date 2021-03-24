@@ -49,7 +49,6 @@ setTimeout(() => {server.getData()}, 200);
 field.updateAllNeighbours();
 
 document.addEventListener('game:end', () => {
-  console.log('game over')
   document.querySelector('[data-status]').dataset['status'] = 'game-over';
   document.querySelector('[data-status]').innerText = 'game-over';
 })
@@ -75,7 +74,6 @@ function calcCellSize(count) {
   const maxCellheight = 100;
   const realCount = count * 2 - 1
 
-  console.log(maxFieldHeight/realCount)
   return Math.min(maxCellheight, maxFieldHeight/realCount/2)
 }
 

@@ -39,7 +39,7 @@ export class Field {
       const {x, y, z} = convertCoordinatesToStrings(cell);
       this.table[x][y][z].value = cell.value
       this.table[x][y][z].$el.dataset.value = cell.value
-    })
+    });
 
     if(this.isGameOver()) {
       const event = new CustomEvent("game:end",{});
@@ -210,11 +210,7 @@ export class Field {
       if (y && coords.y === y) {
         return true;
       }
-      if (z && coords.z === z) {
-        return true;
-      }
-
-      return false
+      return z && coords.z === z;
     })
   }
 
@@ -258,11 +254,7 @@ export class Field {
       if (y && coords.y === y) {
         return true;
       }
-      if (z && coords.z === z) {
-        return true;
-      }
-
-      return false
+      return z && coords.z === z;
     })
   }
 

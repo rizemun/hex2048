@@ -2,6 +2,7 @@
 Hex variation of 2048 game
 
 [![Build Status](https://github.com/rizemun/hex2048/actions/workflows/main.yml/badge.svg)](https://github.com/rizemun/hex2048/actions/workflows/main.yml)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/79cc2cb84b4a429194bd128f5a712269)](https://www.codacy.com/gh/rizemun/hex2048/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=rizemun/hex2048&amp;utm_campaign=Badge_Grade)
 
 link: https://rizemun.github.io/hex2048/
 

@@ -1,6 +1,8 @@
 ###
 Hex variation of 2048 game
 
+[![Build Status](https://github.com/rizemun/hex2048/actions/workflows/main.yml/badge.svg)](https://github.com/rizemun/hex2048/actions/workflows/main.yml)
+
 link: https://rizemun.github.io/hex2048/
 
 Controlls: 

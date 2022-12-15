@@ -1,10 +1,10 @@
 import './styles.less'
 import {Field} from '@/Field'
 import {Keyboard} from  '@/Keyboard';
-import {Server} from "@/Server"
+import {ServerLess} from "@/Server";
 
 const fieldElement = document.getElementById('field')
-let serverUrl = document.getElementById('url-server').value;
+let serverUrl = document.getElementById('url-server')?.value ?? '';
 let field = {};
 const keyboard = new Keyboard();
 let cellCount = 0;
@@ -34,7 +34,7 @@ if(window.location.hash) {
 $range.value = cellCount;
 field = new Field(fieldElement, cellCount, calcCellSize(cellCount))
 
-const server = new Server(serverUrl, cellCount);
+const server = new ServerLess(serverUrl, cellCount);
 
 
 keyboard.onKeyDown('KeyQ', () => {field.makeStep('north-west') && server.getData(field.dataToSend);})
@@ -55,7 +55,7 @@ document.addEventListener('game:end', () => {
 
 document
   .getElementById('url-server')
-  .addEventListener('change', (ev) => {
+  ?.addEventListener('change', (ev) => {
     server.setUrl(ev.target.value);
   })
 

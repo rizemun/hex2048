@@ -33,6 +33,7 @@ export class Field {
   }
 
   _onServerResponse(ev) {
+    console.log('%cev:', 'font-style:italic; color:#ce93d8', ev);
     const response = ev.detail;
 
     response.forEach(cell => {

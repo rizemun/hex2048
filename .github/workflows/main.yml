@@ -24,6 +24,6 @@ jobs:
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         folder: dist
-        repository-name: rizemun/hex2048.git
+        repository-name: rizemun/hex2048
         token: ${{ secrets.GITHUB_TOKEN }}
         branch: gh-pages
